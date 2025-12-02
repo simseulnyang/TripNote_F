@@ -1,3 +1,14 @@
+import java.util.Properties
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if(file.exists()) {
+        file.inputStream().use { load(it) } 
+    }
+}
+
+val kakaoNativeKey: String = localProperties.getProperty("KAKAO_NATIVE_KEY") ?: ""
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -28,6 +39,8 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] = kakaoNativeKey
     }
 
     buildTypes {
