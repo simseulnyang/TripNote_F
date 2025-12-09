@@ -1,13 +1,14 @@
 import java.util.Properties
 
-val localProperties = Properties().apply {
-    val file = rootProject.file("local.properties")
-    if(file.exists()) {
-        file.inputStream().use { load(it) } 
+val localProperties = Properties() 
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use {
+        stream -> localProperties.load(stream)
     }
 }
 
-val kakaoNativeKey: String = localProperties.getProperty("KAKAO_NATIVE_KEY") ?: ""
+val kakaoNativeKey: String = localProperties.getProperty("KAKAO_NATIVE_APP_KEY") ?: ""
 
 plugins {
     id("com.android.application")
