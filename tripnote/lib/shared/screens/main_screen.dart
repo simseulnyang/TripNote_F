@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/trip/screens/trip_list_screen.dart';
-import '../../features/ai_recommend/screens/ai_recommend_screen.dart';
+import '../../features/ai_recommend/screens/chat_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../widgets/bottom_nav_bar.dart';
 
@@ -28,7 +28,7 @@ class MainScreen extends ConsumerWidget {
         index: currentTab,
         children: const [
           TripListScreen(),
-          AIRecommendScreen(),
+          ChatScreen(),
           ProfileScreen(),
         ],
       ),

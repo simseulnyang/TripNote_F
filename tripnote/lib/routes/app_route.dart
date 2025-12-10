@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../features/splash/splash_screen.dart';
 import '../features/auth/screens/login_screen.dart';
+import '../features/ai_recommend/screens/chat_screen.dart';
 import '../shared/screens/main_screen.dart';
 
 /// 앱 라우트 이름 상수
@@ -12,6 +13,7 @@ class AppRoutes {
   static const String login = '/login';
   static const String tripCreate = '/trip/create';
   static const String tripDetail = '/trip/detail';
+  static const String chat = '/chat';
 }
 
 /// 라우트 생성기
@@ -48,6 +50,12 @@ class AppRouter {
             appBar: AppBar(title: const Text('여행 상세')),
             body: Center(child: Text('여행 ID: $tripId')),
           ),
+        );
+
+      case AppRoutes.chat:
+        final sessionId = settings.arguments as int?;
+        return MaterialPageRoute(
+          builder: (_) => ChatScreen(sessionId: sessionId),
         );
 
       default:
