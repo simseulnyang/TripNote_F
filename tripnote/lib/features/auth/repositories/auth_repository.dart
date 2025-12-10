@@ -4,13 +4,11 @@ import '../../../core/network/api_client.dart';
 import '../../../core/utils/secure_storage.dart';
 import '../models/user_model.dart';
 
-/// 인증 관련 API 호출을 담당하는 Repository
 class AuthRepository {
   final ApiClient _apiClient = ApiClient();
   final SecureStorage _storage = SecureStorage();
 
   /// 카카오 소셜 로그인
-  ///
   /// [code] - 카카오 OAuth 인가 코드
   /// 반환: [SocialLoginResponse] - JWT 토큰 및 사용자 정보
   Future<SocialLoginResponse> kakaoLogin(String code) async {
@@ -22,10 +20,7 @@ class AuthRepository {
 
       if (response.statusCode == 200) {
         final loginResponse = SocialLoginResponse.fromJson(response.data);
-
-        // 토큰 및 사용자 정보 저장
         await _saveAuthData(loginResponse);
-
         return loginResponse;
       } else {
         throw AuthException('카카오 로그인에 실패했습니다.');
@@ -44,10 +39,7 @@ class AuthRepository {
 
       if (response.statusCode == 200) {
         final loginResponse = SocialLoginResponse.fromJson(response.data);
-
-        // 토큰 및 사용자 정보 저장
         await _saveAuthData(loginResponse);
-
         return loginResponse;
       } else {
         throw AuthException('카카오 로그인에 실패했습니다.');
@@ -58,7 +50,6 @@ class AuthRepository {
   }
 
   /// 구글 소셜 로그인
-  ///
   /// [code] - 구글 OAuth 인가 코드
   /// 반환: [SocialLoginResponse] - JWT 토큰 및 사용자 정보
   Future<SocialLoginResponse> googleLogin(String code) async {
@@ -70,10 +61,7 @@ class AuthRepository {
 
       if (response.statusCode == 200) {
         final loginResponse = SocialLoginResponse.fromJson(response.data);
-
-        // 토큰 및 사용자 정보 저장
         await _saveAuthData(loginResponse);
-
         return loginResponse;
       } else {
         throw AuthException('구글 로그인에 실패했습니다.');
@@ -83,14 +71,12 @@ class AuthRepository {
     }
   }
 
-  /// 현재 사용자 정보 조회
   Future<UserModel?> getCurrentUser() async {
     try {
       final hasToken = await _storage.hasValidToken();
       if (!hasToken) return null;
 
       final response = await _apiClient.get(ApiConstants.userMe);
-
       if (response.statusCode == 200) {
         return UserModel.fromJson(response.data);
       }
@@ -100,32 +86,26 @@ class AuthRepository {
     }
   }
 
-  /// 로그아웃
   Future<void> logout() async {
     try {
-      // 서버에 로그아웃 요청 (선택적)
       final refreshToken = await _storage.getRefreshToken();
       if (refreshToken != null) {
         await _apiClient.post(
           ApiConstants.logout,
-          data: {'refresh': refreshToken},
+          data: {'refresh_token': refreshToken},
         );
       }
     } catch (e) {
-      // 서버 로그아웃 실패해도 로컬 데이터는 삭제
       print('Server logout failed: $e');
     } finally {
-      // 로컬 저장소 정리
       await _storage.clearAll();
     }
   }
 
-  /// 저장된 토큰 유효성 확인
   Future<bool> isLoggedIn() async {
     return await _storage.hasValidToken();
   }
 
-  /// 저장된 사용자 정보 조회 (로컬)
   Future<UserModel?> getStoredUser() async {
     final id = await _storage.getUserId();
     final email = await _storage.getUserEmail();
@@ -143,7 +123,6 @@ class AuthRepository {
     return null;
   }
 
-  /// 인증 데이터 저장 (토큰 + 사용자 정보)
   Future<void> _saveAuthData(SocialLoginResponse response) async {
     await _storage.saveTokens(
       accessToken: response.accessToken,
@@ -158,7 +137,6 @@ class AuthRepository {
     );
   }
 
-  /// Dio 에러 처리
   AuthException _handleDioError(DioException e, String provider) {
     if (e.response != null) {
       final statusCode = e.response!.statusCode;

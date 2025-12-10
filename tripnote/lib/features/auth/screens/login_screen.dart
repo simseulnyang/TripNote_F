@@ -7,7 +7,6 @@ import '../providers/auth_provider.dart';
 import '../widgets/social_login_button.dart';
 
 /// 로그인 화면
-///
 /// 카카오, 구글 소셜 로그인 버튼 제공
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -20,7 +19,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    // 에러 상태 초기화
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(authProvider.notifier).clearError();
     });
@@ -31,7 +29,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.watch(authProvider);
     final isLoading = authState.status == AuthStatus.loading;
 
-    // 에러 메시지 표시
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (next.status == AuthStatus.authenticated) {
         Navigator.of(context).pushNamedAndRemoveUntil(
@@ -63,20 +60,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: Column(
             children: [
               const Spacer(flex: 2),
-
-              // 로고 및 타이틀
               _buildHeader(),
-
               const Spacer(flex: 2),
-
-              // 소셜 로그인 버튼
               _buildLoginButtons(isLoading),
-
               const SizedBox(height: 24),
-
-              // 약관 안내
               _buildTermsText(),
-
               const SizedBox(height: 40),
             ],
           ),
@@ -85,11 +73,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  /// 헤더 (로고 + 타이틀)
   Widget _buildHeader() {
     return Column(
       children: [
-        // 로고 (앱 아이콘 또는 텍스트)
         Container(
           width: 100,
           height: 100,
@@ -111,10 +97,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           ),
         ),
-
         const SizedBox(height: 24),
-
-        // 앱 이름
         Text(
           'TripNote',
           style: AppTextStyles.headlineLarge.copyWith(
@@ -122,10 +105,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             fontWeight: FontWeight.w800,
           ),
         ),
-
         const SizedBox(height: 8),
-
-        // 부제목
         Text(
           '나만의 여행 일정을 기록하세요',
           style: AppTextStyles.bodyMedium.copyWith(
@@ -136,11 +116,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  /// 소셜 로그인 버튼들
   Widget _buildLoginButtons(bool isLoading) {
     return Column(
       children: [
-        // 카카오 로그인
         SocialLoginButton(
           type: SocialLoginType.kakao,
           isLoading: isLoading,
@@ -148,10 +126,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ref.read(authProvider.notifier).loginWithKakao();
           },
         ),
-
         const SizedBox(height: 12),
-
-        // 구글 로그인
         SocialLoginButton(
           type: SocialLoginType.google,
           isLoading: isLoading,
