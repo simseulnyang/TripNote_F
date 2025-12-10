@@ -34,7 +34,6 @@ class AppRouter {
         );
 
       case AppRoutes.tripCreate:
-        // TODO: 여행 일정 생성 화면
         return MaterialPageRoute(
           builder: (_) => Scaffold(
             appBar: AppBar(title: const Text('여행 일정 기록하기')),
@@ -43,7 +42,6 @@ class AppRouter {
         );
 
       case AppRoutes.tripDetail:
-        // TODO: 여행 일정 상세 화면
         final tripId = settings.arguments as int?;
         return MaterialPageRoute(
           builder: (_) => Scaffold(
